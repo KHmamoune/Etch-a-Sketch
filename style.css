@@ -20,6 +20,29 @@ input {
     border-radius: 20px;
 }
 
+button {
+    color: white;
+    background-color: black;
+    border-radius: 5px;
+}
+
+.size button {
+    border-radius: 0px;
+}
+
+.size {
+    border: 2px solid black;
+    border-radius: 5px;
+}
+
+.rainbow {
+    background-color: red;
+}
+
+.gap {
+    background-color: red;
+}
+
 .title {
     color: #C8C3BC;
     font-size: 52px;
@@ -35,9 +58,8 @@ input {
 
 .num {
     background-color: white;
-    border-radius: 5px;
     margin: 0px;
-    padding: 13px 50px;
+    padding: 12px 50px;
 }
 
 .set {
@@ -46,13 +68,8 @@ input {
     justify-content: space-evenly;
     border: 5px solid black;
     border-radius: 20px;
+    background-color: #575e61;
     padding: 20px;
-}
-
-.set button {
-    color: white;
-    background-color: black;
-    border-radius: 5px;
 }
 
 .size {
