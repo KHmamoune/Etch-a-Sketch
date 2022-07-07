@@ -7,9 +7,29 @@
     <title>Etch-a-Sketch</title>
 </head>
 <body>
-    <div class="title">
-        <div>Etch-a-Sketch</div>
-        <button class="btn">edit size</button>
+    <div class="title">Etch-a-Sketch</div>
+    <div class="main">
+        <div class="set">
+            <div class="size">
+                <div class="s-btns">
+                    <button class="size-up">size up</button>
+                    <button class="size-dn">size down</button>
+                </div>
+                <div>
+                    <p class="num">16</p>
+                </div>
+                    <button class="resize">resize</button>
+            </div>
+            <button class="rainbow">Rainbow: Off</button>
+            <button class="gap">Outline: Off</button>
+            <button class="erase">Eraser</button>
+            <button class="clear">Clear All</button>
+            <div class="picker">
+                <label for="color">Current Color:</label>
+                <input type="color" id="color" value="#000000">
+            </div>
+        </div>
+        <div class="grid"></div>
     </div>
 </body>
 </html>

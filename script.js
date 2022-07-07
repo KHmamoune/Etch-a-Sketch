@@ -1,6 +1,19 @@
-const grid = document.createElement("div")
-grid.classList.add("grid")
-document.body.appendChild(grid)
+const grid = document.querySelector(".grid")
+const num = document.querySelector(".num")
+const color = document.querySelector("#color")
+const eraser = document.querySelector(".erase")
+const gap = document.querySelector(".gap")
+const rain = document.querySelector(".rainbow")
+let thecolor = "#000000"
+let size = 16
+let gap_size = 0
+let rainbow = "false"
+
+createGrid(256)
+
+color.addEventListener("change", () => {
+  thecolor = color.value
+})
 
 function createGrid(num) {
   for (let i=1; i<=num; i++) {
@@ -10,23 +23,69 @@ function createGrid(num) {
   }
   
   document.querySelectorAll(".div").forEach(item => {
-    item.addEventListener("mouseenter", () => {
-    item.setAttribute("style", "background: black;")
+    item.addEventListener("mouseenter", function(){
+      if(rainbow == "false"){
+        item.setAttribute("style", "background: " + thecolor + ";")
+      }else{
+        let r = Math.floor(Math.random() * 256)
+        let g = Math.floor(Math.random() * 256)
+        let b = Math.floor(Math.random() * 256)
+        item.setAttribute("style", "background: " + rgbToHex(r,g,b) + ";")
+      }
     })
   })
 }
 
-createGrid(256)
+document.querySelector(".resize").addEventListener("click", () => changeSize(size))
+eraser.addEventListener("click", () => {thecolor = "#FAEBD7"})
+rain.addEventListener("click", () => {
+  if(rainbow == "false"){
+    rainbow = "true"
+    rain.textContent = "Rainbow: On"
+  }else{
+    rainbow = "false"
+    rain.textContent = "Rainbow: Off"
+  }
+})
 
-document.querySelector(".btn").addEventListener("click", () => size())
+document.querySelector(".clear").addEventListener("click", () => {
+  document.querySelectorAll(".div").forEach(item => item.setAttribute("style", "background: #FAEBD7;"))
+})
 
-function size() {
-  let size
-  do{
-    size = window.prompt("enter the size of the grid", String)
-  }while(size<1 || size>100)
+gap.addEventListener("click", () => {
+  if(gap_size == 0){
+    gap_size = 1
+    grid.setAttribute("style", "gap:" + gap_size + "px;")
+    gap.textContent = "Outline: On"
+  }else{
+    gap_size = 0
+    grid.setAttribute("style", "gap:" + gap_size + "px;")
+    gap.textContent = "Outline: Off"
+  }
+})
 
+document.querySelector(".size-up").addEventListener("click", () => {
+  num.textContent++
+  size = num.textContent
+  if(size>100){
+    num.textContent--
+  }
+})
+
+document.querySelector(".size-dn").addEventListener("click", () => {
+  num.textContent--
+  size = num.textContent
+  if(size<0){
+    num.textContent++
+  }
+})
+
+function changeSize(size) {
   document.querySelectorAll(".div").forEach(item => item.remove())
   createGrid(size*size)
   grid.style.gridTemplateColumns = "repeat(" + size + ",1fr)"
+}
+
+function rgbToHex(r, g, b) {
+  return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
 }
