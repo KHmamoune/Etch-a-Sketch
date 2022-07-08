@@ -1,68 +1,32 @@
 const grid = document.querySelector(".grid")
+const sizeup = document.querySelector(".size-up")
+const sizedown = document.querySelector(".size-dn")
 const num = document.querySelector(".num")
-const color = document.querySelector("#color")
+const resize = document.querySelector(".resize")
+const buttons = document.querySelectorAll(".btn")
+const color = document.querySelector(".default")
+const rain = document.querySelector(".rainbow")
 const eraser = document.querySelector(".erase")
 const gap = document.querySelector(".gap")
-const rain = document.querySelector(".rainbow")
+const clear = document.querySelector(".clear")
+const picker = document.querySelector("#color")
 let thecolor = "#000000"
+let mode = "color"
 let down = false
 let size = 16
 let gap_size = 0
-let rainbow = false
 
 createGrid(256)
 
-color.addEventListener("change", () => {
-  thecolor = color.value
-})
-
-function createGrid(num) {
-  for (let i=1; i<=num; i++) {
-    const element = document.createElement("div")
-    element.classList.add("div")
-    grid.appendChild(element)
-  }
-  
-  document.querySelectorAll(".div").forEach(item => {
-    item.addEventListener("mouseover", () => {
-      if(down){
-        if(rainbow){
-          let r = Math.floor(Math.random() * 256)
-          let g = Math.floor(Math.random() * 256)
-          let b = Math.floor(Math.random() * 256)
-          item.setAttribute("style", "background: " + rgbToHex(r,g,b) + ";")
-        }else{
-          item.setAttribute("style", "background: " + thecolor + ";")
-        }
-      }
-    })
-    item.addEventListener("mousedown", () => {
-      if(rainbow){
-        let r = Math.floor(Math.random() * 256)
-        let g = Math.floor(Math.random() * 256)
-        let b = Math.floor(Math.random() * 256)
-        item.setAttribute("style", "background: " + rgbToHex(r,g,b) + ";")
-      }else{
-        item.setAttribute("style", "background: " + thecolor + ";")
-      }
-    })
-  })
-}
-
-
-document.querySelector(".resize").addEventListener("click", () => changeSize(size))
-eraser.addEventListener("click", () => {thecolor = "#FAEBD7"})
-rain.addEventListener("click", () => {
-  if(rainbow == false){
-    rainbow = true
-    rain.textContent = "Rainbow: On"
-    rain.setAttribute("style", "background: green;")
-  }else{
-    rainbow = false
-    rain.textContent = "Rainbow: Off"
-    rain.setAttribute("style", "background: red;")
-  }
-})
+sizeup.addEventListener("click", () => sizeUp())
+sizedown.addEventListener("click", () => sizeDn())
+resize.addEventListener("click", () => changeSize(size))
+color.addEventListener("click", () => changeDef())
+rain.addEventListener("click", () => changeRainbow())
+eraser.addEventListener("click", () => changeEraser())
+gap.addEventListener("click", () => addGap())
+clear.addEventListener("click", () => clearAll())
+picker.addEventListener("change", () => thecolor = picker.value)
 
 document.body.onmousedown = function() {
   down = true
@@ -72,39 +36,41 @@ document.body.onmouseup = function() {
   down = false
 }
 
-document.querySelector(".clear").addEventListener("click", () => {
-  document.querySelectorAll(".div").forEach(item => item.setAttribute("style", "background: #FAEBD7;"))
+buttons.forEach(item => {
+  item.addEventListener("click", () => {
+    num.textContent = item.textContent.split(" ").slice(1)
+    size = num.textContent
+    changeSize(size)
+  })
 })
 
-gap.addEventListener("click", () => {
-  if(gap_size == 0){
-    gap_size = 1
-    grid.setAttribute("style", "gap:" + gap_size + "px;")
-    gap.textContent = "Outline: On"
-    gap.setAttribute("style", "background: green;")
-  }else{
-    gap_size = 0
-    grid.setAttribute("style", "gap:" + gap_size + "px;")
-    gap.textContent = "Outline: Off"
-    gap.setAttribute("style", "background: red;")
+function createGrid(num) {
+  for (let i=1; i<=num; i++) {
+    const element = document.createElement("div")
+    element.classList.add("div")
+    element.addEventListener("mouseover", () => changeColor(element))
+    element.addEventListener("mousedown", () => {down = true; changeColor(element)})
+    element.addEventListener("mouseenter", () => element.style.border = "1px solid black")
+    element.addEventListener("mouseleave", () => element.style.border = "none")
+    grid.appendChild(element)
   }
-})
+}
 
-document.querySelector(".size-up").addEventListener("click", () => {
+function sizeUp() {
   num.textContent++
   size = num.textContent
   if(size>100){
     num.textContent--
   }
-})
+}
 
-document.querySelector(".size-dn").addEventListener("click", () => {
+function sizeDn() {
   num.textContent--
   size = num.textContent
   if(size<0){
     num.textContent++
   }
-})
+}
 
 function changeSize(size) {
   document.querySelectorAll(".div").forEach(item => item.remove())
@@ -112,19 +78,69 @@ function changeSize(size) {
   grid.style.gridTemplateColumns = "repeat(" + size + ",1fr)"
 }
 
-function rgbToHex(r, g, b) {
-  return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+function changeDef() {
+  mode = "color"
+  rain.textContent = "Rainbow: Off"
+  rain.style.background = "red"
+  eraser.textContent = "Eraser: Off"
+  eraser.style.background = "red"
+  color.textContent = "color: On"
+  color.style.background = "green"
 }
 
-function changeColor(item) {
+function changeRainbow() {
+  mode = "rainbow"
+  rain.textContent = "Rainbow: On"
+  rain.style.background = "green"
+  eraser.textContent = "Eraser: Off"
+  eraser.style.background = "red"
+  color.textContent = "color: Off"
+  color.style.background = "red"
+}
+
+function changeEraser() {
+  mode = "eraser"
+  rain.textContent = "Rainbow: Off"
+  rain.style.background = "red"
+  eraser.textContent = "Eraser: On"
+  eraser.style.background = "green"
+  color.textContent = "color: Off"
+  color.style.background = "red"
+}
+
+function addGap(){
+  if(gap_size == 0){
+    gap_size = 1
+    grid.style.gap = gap_size + "px"
+    gap.textContent = "Outline: On"
+    gap.style.background = "green"
+  }else{
+    gap_size = 0
+    grid.style.gap = gap_size + "px"
+    gap.textContent = "Outline: Off"
+    gap.style.background = "red"
+  }
+}
+
+function clearAll(){
+  document.querySelectorAll(".div").forEach(item => item.style.background = "#FAEBD7")
+}
+
+function changeColor(element) {
   if(down){
-    if(rainbow){
+    if(mode == "rainbow"){
       let r = Math.floor(Math.random() * 256)
       let g = Math.floor(Math.random() * 256)
       let b = Math.floor(Math.random() * 256)
-      item.setAttribute("style", "background: " + rgbToHex(r,g,b) + ";")
+      element.style.background = rgbToHex(r,g,b)
+    }else if(mode == "color"){
+      element.style.background = thecolor
     }else{
-      item.setAttribute("style", "background: " + thecolor + ";")
+      element.style.background = "#FAEBD7"
     }
   }
+}
+
+function rgbToHex(r, g, b) {
+  return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
 }
