@@ -50,8 +50,6 @@ function createGrid(num) {
     element.classList.add("div")
     element.addEventListener("mouseover", () => changeColor(element))
     element.addEventListener("mousedown", () => {down = true; changeColor(element)})
-    element.addEventListener("mouseenter", () => element.style.border = "1px solid black")
-    element.addEventListener("mouseleave", () => element.style.border = "none")
     grid.appendChild(element)
   }
 }
@@ -123,7 +121,10 @@ function addGap(){
 }
 
 function clearAll(){
-  document.querySelectorAll(".div").forEach(item => item.style.background = "#FAEBD7")
+  document.querySelectorAll(".div").forEach(item => {
+    item.style.background = "#FAEBD7" 
+    item.style.borderColor = "#FAEBD7"
+  })
 }
 
 function changeColor(element) {
@@ -133,10 +134,13 @@ function changeColor(element) {
       let g = Math.floor(Math.random() * 256)
       let b = Math.floor(Math.random() * 256)
       element.style.background = rgbToHex(r,g,b)
+      element.style.borderColor = rgbToHex(r,g,b)
     }else if(mode == "color"){
       element.style.background = thecolor
+      element.style.borderColor = thecolor
     }else{
       element.style.background = "#FAEBD7"
+      element.style.borderColor = "#FAEBD7"
     }
   }
 }
